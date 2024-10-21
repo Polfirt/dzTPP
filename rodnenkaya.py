@@ -1,5 +1,5 @@
 import sqlite3
-
+from datetime import datetime
 # Создание/подключение к базе данных
 connection = sqlite3.connect('university.db')
 db_cursor = connection.cursor()
@@ -485,7 +485,7 @@ def main():
     db_cursor.close()
 
 
-    if name == "__main__":
-        main()
+if __name__ == "__main__":
+    main()
 
 #конец кода)
