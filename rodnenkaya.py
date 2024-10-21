@@ -1,7 +1,7 @@
 import sqlite3
 
 # Создание/подключение к базе данных
-connection = sqlite3.connect('university_database.db')
+connection = sqlite3.connect('university.db')
 db_cursor = connection.cursor()
 
 # Создание таблиц
