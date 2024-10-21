@@ -59,174 +59,233 @@ connection.commit()
 
 # Функции для добавления данных
 def add_new_student(first_name, last_name, faculty, birth_date):
-    db_cursor.execute('''
-        INSERT INTO Students (first_name, last_name, faculty, birth_date)
-        VALUES (?, ?, ?, ?)
-    ''', (first_name, last_name, faculty, birth_date))
-    connection.commit()
+    try:
+        db_cursor.execute('''
+            INSERT INTO Students (first_name, last_name, faculty, birth_date)
+            VALUES (?, ?, ?, ?)
+        ''', (first_name, last_name, faculty, birth_date))
+        connection.commit()
+    except sqlite3.Error as e:
+        print(f"Произошла ошибка при добавлении студента: {e}")
 
 def add_new_instructor(first_name, last_name, department):
-    db_cursor.execute('''
-        INSERT INTO Instructors (first_name, last_name, department)
-        VALUES (?, ?, ?)
-    ''', (first_name, last_name, department))
-    connection.commit()
+    try:
+        db_cursor.execute('''
+            INSERT INTO Instructors (first_name, last_name, department)
+            VALUES (?, ?, ?)
+        ''', (first_name, last_name, department))
+        connection.commit()
+    except sqlite3.Error as e:
+        print(f"Произошла ошибка при добавлении препода: {e}")
 
 def add_new_course(course_name, course_description, instructor_id):
-    db_cursor.execute('''
-        INSERT INTO Courses (course_name, course_description, instructor_id)
-        VALUES (?, ?, ?)
-    ''', (course_name, course_description, instructor_id))
-    connection.commit()
+    try:
+        db_cursor.execute('''
+            INSERT INTO Courses (course_name, course_description, instructor_id)
+            VALUES (?, ?, ?)
+        ''', (course_name, course_description, instructor_id))
+        connection.commit()
+    except sqlite3.Error as e:
+        print(f"Произошла ошибка при добавлении курса: {e}")
 
 def add_new_exam(exam_date, course_id, max_score):
-    db_cursor.execute('''
-        INSERT INTO Exams (exam_date, course_id, max_score)
-        VALUES (?, ?, ?)
-    ''', (exam_date, course_id, max_score))
-    connection.commit()
+    try:
+        db_cursor.execute('''
+            INSERT INTO Exams (exam_date, course_id, max_score)
+            VALUES (?, ?, ?)
+        ''', (exam_date, course_id, max_score))
+        connection.commit()
+    except sqlite3.Error as e:
+        print(f"Произошла ошибка при добавлении экзамена: {e}")
+
 
 def add_new_grade(student_id, exam_id, score):
-    db_cursor.execute('''
-        INSERT INTO Grades (student_id, exam_id, score)
-        VALUES (?, ?, ?)
-    ''', (student_id, exam_id, score))
-    connection.commit()
+    try:
+        db_cursor.execute('''
+            INSERT INTO Grades (student_id, exam_id, score)
+            VALUES (?, ?, ?)
+        ''', (student_id, exam_id, score))
+        connection.commit()
+    except sqlite3.Error as e:
+        print(f"Произошла ошибка при добавлении оценки: {e}")
 
 # Функции для обновления данных
 def update_student_data(student_id, first_name=None, last_name=None, faculty=None, birth_date=None):
-    update_query = 'UPDATE Students SET'
-    params = []
+    try:
+        update_query = 'UPDATE Students SET'
+        params = []
     
-    if first_name:
-        update_query += ' first_name=?,'
-        params.append(first_name)
+        if first_name:
+            update_query += ' first_name=?,'
+            params.append(first_name)
     
-    if last_name:
-        update_query += ' last_name=?,'
-        params.append(last_name)
+        if last_name:
+            update_query += ' last_name=?,'
+            params.append(last_name)
     
-    if faculty:
-        update_query += ' faculty=?,'
-        params.append(faculty)
+        if faculty:
+            update_query += ' faculty=?,'
+            params.append(faculty)
     
-    if birth_date:
-        update_query += ' birth_date=?,'
-        params.append(birth_date)
+        if birth_date:
+            update_query += ' birth_date=?,'
+            params.append(birth_date)
     
-    update_query = update_query.rstrip(',') + ' WHERE student_id=?'
-    params.append(student_id)
+        update_query = update_query.rstrip(',') + ' WHERE student_id=?'
+        params.append(student_id)
     
-    db_cursor.execute(update_query, tuple(params))
-    connection.commit()
+        db_cursor.execute(update_query, tuple(params))
+        connection.commit()
+    except sqlite3.Error as e:
+        print(f"Произошла ошибка при обновлении данных студента: {e}")
 
 def update_instructor_data(instructor_id, first_name=None, last_name=None, department=None):
-    update_query = 'UPDATE Instructors SET'
-    params = []
+    try:
+        update_query = 'UPDATE Instructors SET'
+        params = []
     
-    if first_name:
-        update_query += ' first_name=?,'
-        params.append(first_name)
+        if first_name:
+            update_query += ' first_name=?,'
+            params.append(first_name)
     
-    if last_name:
-        update_query += ' last_name=?,'
-        params.append(last_name)
+        if last_name:
+            update_query += ' last_name=?,'
+            params.append(last_name)
     
-    if department:
-        update_query += ' department=?,'
-        params.append(department)
+        if department:
+            update_query += ' department=?,'
+            params.append(department)
     
-    update_query = update_query.rstrip(',') + ' WHERE instructor_id=?'
-    params.append(instructor_id)
-    
-    db_cursor.execute(update_query, tuple(params))
-    connection.commit()
-
-def update_course_data(course_id, course_name=None, course_description=None, instructor_id=None):
-    update_query = 'UPDATE Courses SET'
-    params = []
-    
-    if course_name:
-        update_query += ' course_name=?,'
-        params.append(course_name)
-    
-    if course_description:
-        update_query += ' course_description=?,'
-        params.append(course_description)
-    
-    if instructor_id:
-        update_query += ' instructor_id=?,'
+        update_query = update_query.rstrip(',') + ' WHERE instructor_id=?'
         params.append(instructor_id)
     
-    update_query = update_query.rstrip(',') + ' WHERE course_id=?'
-    params.append(course_id)
+        db_cursor.execute(update_query, tuple(params))
+        connection.commit()
+    except sqlite3.Error as e:
+        print(f"Произошла ошибка при обновлении данных препода: {e}")
+
+def update_course_data(course_id, course_name=None, course_description=None, instructor_id=None):
+    try:
+        update_query = 'UPDATE Courses SET'
+        params = []
     
-    db_cursor.execute(update_query, tuple(params))
-    connection.commit()
+        if course_name:
+            update_query += ' course_name=?,'
+            params.append(course_name)
+    
+        if course_description:
+            update_query += ' course_description=?,'
+            params.append(course_description)
+    
+        if instructor_id:
+            update_query += ' instructor_id=?,'
+            params.append(instructor_id)
+    
+        update_query = update_query.rstrip(',') + ' WHERE course_id=?'
+        params.append(course_id)
+    
+        db_cursor.execute(update_query, tuple(params))
+        connection.commit()
+    except sqlite3.Error as e:
+        print(f"Произошла ошибка при обновлении данных курса: {e}")
 
 # Функции для удаления данных
 def delete_student_data(student_id):
-    db_cursor.execute('DELETE FROM Students WHERE student_id=?', (student_id,))
-    connection.commit()
+    try:
+        db_cursor.execute('DELETE FROM Students WHERE student_id=?', (student_id,))
+        connection.commit()
+    except sqlite3.Error as e:
+        print(f"Произошла ошибка при удалении студента: {e}")
+        
 
 def delete_instructor_data(instructor_id):
-    db_cursor.execute('DELETE FROM Instructors WHERE instructor_id=?', (instructor_id,))
-    connection.commit()
+    try:
+        db_cursor.execute('DELETE FROM Instructors WHERE instructor_id=?', (instructor_id,))
+        connection.commit()
+    except sqlite3.Error as e:
+        print(f"Произошла ошибка при удалении препода: {e}")
 
 def delete_course_data(course_id):
-    db_cursor.execute('DELETE FROM Courses WHERE course_id=?', (course_id,))
-    connection.commit()
+    try:
+        db_cursor.execute('DELETE FROM Courses WHERE course_id=?', (course_id,))
+        connection.commit()
+    except sqlite3.Error as e:
+        print(f"Произошла ошибка при удалении курса: {e}")
 
 def delete_exam_data(exam_id):
-    db_cursor.execute('DELETE FROM Exams WHERE exam_id=?', (exam_id,))
-    connection.commit()
+    try:
+        db_cursor.execute('DELETE FROM Exams WHERE exam_id=?', (exam_id,))
+        connection.commit()
+    except sqlite3.Error as e:
+        print(f"Произошла ошибка при удалении экзамена: {e}")
 
 # Функции для выполнения запросов
 def fetch_students_by_faculty(faculty):
-    db_cursor.execute('SELECT * FROM Students WHERE faculty=?', (faculty,))
-    return db_cursor.fetchall()
+    try:
+        db_cursor.execute('SELECT * FROM Students WHERE faculty=?', (faculty,))
+        return db_cursor.fetchall()
+    except sqlite3.Error as e:
+        print(f"Произошла ошибка при получении списка: {e}")
 
 def fetch_courses_by_instructor(instructor_id):
-    db_cursor.execute('SELECT * FROM Courses WHERE instructor_id=?', (instructor_id,))
-    return db_cursor.fetchall()
+    try:
+        db_cursor.execute('SELECT * FROM Courses WHERE instructor_id=?', (instructor_id,))
+        return db_cursor.fetchall()
+    except sqlite3.Error as e:
+        print(f"Произошла ошибка при получении списка: {e}")
 
 def fetch_students_by_course(course_id):
-    db_cursor.execute('''
-        SELECT Students.* FROM Students
-        JOIN Grades ON Students.student_id = Grades.student_id
-        JOIN Exams ON Grades.exam_id = Exams.exam_id
-        WHERE Exams.course_id=?
-    ''', (course_id,))
-    return db_cursor.fetchall()
+    try:
+        db_cursor.execute('''
+            SELECT Students.* FROM Students
+            JOIN Grades ON Students.student_id = Grades.student_id
+            JOIN Exams ON Grades.exam_id = Exams.exam_id
+            WHERE Exams.course_id=?
+        ''', (course_id,))
+        return db_cursor.fetchall()
+    except sqlite3.Error as e:
+        print(f"Произошла ошибка при получении списка: {e}")
 
 def fetch_grades_by_course(course_id):
-    db_cursor.execute('''
-        SELECT Grades.* FROM Grades
-        JOIN Exams ON Grades.exam_id = Exams.exam_id
-        WHERE Exams.course_id=?
-    ''', (course_id,))
-    return db_cursor.fetchall()
+    try:
+        db_cursor.execute('''
+            SELECT Grades.* FROM Grades
+            JOIN Exams ON Grades.exam_id = Exams.exam_id
+            WHERE Exams.course_id=?
+        ''', (course_id,))
+        return db_cursor.fetchall()
+    except sqlite3.Error as e:
+        print(f"Произошла ошибка при получении списка: {e}")
 
 def fetch_avg_score_by_course(student_id, course_id):
-    db_cursor.execute('''SELECT AVG(Grades.Score) FROM Grades
-                      JOIN Exams ON Grades.ExamID = Exams.ID
-                      WHERE Grades.StudentID = ? AND Exams.CourseID = ?''', (student_id, course_id))
-    return db_cursor.fetchone()
+    try:
+        db_cursor.execute('''SELECT AVG(Grades.Score) FROM Grades
+                          JOIN Exams ON Grades.ExamID = Exams.ID
+                          WHERE Grades.StudentID = ? AND Exams.CourseID = ?''', (student_id, course_id))
+        return db_cursor.fetchone()
+    except sqlite3.Error as e:
+        print(f"Произошла ошибка при выводе среднего значения по курсу: {e}")
 
 def fetch_avg_score_by_student(student_id):
-    db_cursor.execute('''
-        SELECT AVG(score) FROM Grades
-        WHERE student_id=?
-    ''', (student_id,))
-    return db_cursor.fetchone()
+    try:
+        db_cursor.execute('''
+            SELECT AVG(score) FROM Grades
+            WHERE student_id=?
+        ''', (student_id,))
+        return db_cursor.fetchone()
+    except sqlite3.Error as e:
+        print(f"Произошла ошибка при выводе среднего значения по студенту: {e}")
 
 def fetch_avg_score_by_faculty(faculty):
-    db_cursor.execute('''
-        SELECT AVG(Grades.score) FROM Grades
-        JOIN Students ON Grades.student_id = Students.student_id
-        WHERE Students.faculty=?
-    ''', (faculty,))
-    return db_cursor.fetchone()
+    try:
+        db_cursor.execute('''
+            SELECT AVG(Grades.score) FROM Grades
+            JOIN Students ON Grades.student_id = Students.student_id
+            WHERE Students.faculty=?
+        ''', (faculty,))
+        return db_cursor.fetchone()
+    except sqlite3.Error as e:
+        print(f"Произошла ошибка при выводе среднего значения по факультету: {e}")
 
 # Основная функция
 def main():
@@ -328,25 +387,25 @@ def main():
             
         elif choice == '13':
             faculty = input("Введите факультет: ")
-            students = get_students_by_faculty(faculty)
+            students = fetch_students_by_faculty(faculty)
             for student in students:
                 print(student)
         
         elif choice == '14':
             instructor_id = int(input("Введите ID препода: "))
-            courses = get_courses_by_instructor(instructor_id)
+            courses = fetch_courses_by_instructor(instructor_id)
             for course in courses:
                 print(course)
         
         elif choice == '15':
             course_id = int(input("Введите ID курса: "))
-            students = get_students_by_course(course_id)
+            students = fetch_students_by_course(course_id)
             for student in students:
                 print(student)
         
         elif choice == '16':
             course_id = int(input("Введите ID курса: "))
-            grades = get_grades_by_course(course_id)
+            grades = fetch_grades_by_course(course_id)
             for grade in grades:
                 print(grade)
         
