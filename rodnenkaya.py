@@ -57,6 +57,30 @@ db_cursor.execute('''
 
 connection.commit()
 
+
+def check_student_exists(student_id):
+    db_cursor.execute('SELECT COUNT(*) FROM Students WHERE ID = ?', (student_id,))
+    return db_cursor.fetchone()[0] > 0
+
+def check_teacher_exists(instructor_id):
+    db_cursor.execute('SELECT COUNT(*) FROM Teachers WHERE ID = ?', (instructor_id,))
+    return db_cursor.fetchone()[0] > 0
+
+def check_course_exists(course_id):
+    db_cursor.execute('SELECT COUNT(*) FROM Courses WHERE ID = ?', (course_id,))
+    return db_cursor.fetchone()[0] > 0
+
+def check_exam_exists(exam_id):
+    db_cursor.execute('SELECT COUNT(*) FROM Exams WHERE ID = ?', (exam_id,))
+    return db_cursor.fetchone()[0] > 0
+
+def validate_date(date_string):
+    try:
+        datetime.strptime(date_string, '%Y-%m-%d')
+        return True
+    except ValueError:
+        return False
+
 # Функции для добавления данных
 def add_new_student(first_name, last_name, faculty, birth_date):
     try:
@@ -321,6 +345,9 @@ def main():
             last_name = input("Введите фамилию: ")
             faculty = input("Введите факультет: ")
             birth_date = input("Введите дату рождения (гггг-мм-дд): ")
+            if not validate_date(birth_date):
+                print('Ошибка: Неправильный формат даты. Используйте формат YYYY-MM-DD.')
+                continue
             add_new_student(first_name, last_name, faculty, birth_date)
         
         elif choice == '2':
@@ -337,26 +364,44 @@ def main():
         
         elif choice == '4':
             exam_date = input("Введите дату экзамена (гггг-мм-дд): ")
+            if not validate_date(exam_date):
+                print('Ошибка: Неправильный формат даты. Используйте формат YYYY-MM-DD.')
+                continue
             course_id = int(input("Введите ID курса: "))
             max_score = int(input("Введите максимальный балл: "))
             add_new_exam(exam_date, course_id, max_score)
         
         elif choice == '5':
             student_id = int(input("Введите ID студента: "))
+            if not check_student_exists(student_id):
+                print(f'Ошибка: Студент с ID {student_id} не существует.')
+                continue
             exam_id = int(input("Введите ID экзамена: "))
+            if not check_exam_exists(exam_id):
+                print(f'Ошибка: Экзамен с ID {exam_id} не существует.')
+                continue
             score = int(input("Введите оценку: "))
             add_new_grade(student_id, exam_id, score)
         
         elif choice == '6':
             student_id = int(input("Введите ID студента: "))
+            if not check_student_exists(student_id):
+                print(f'Ошибка: Студент с ID {student_id} не существует.')
+                continue
             first_name = input("Введите имя (оставьте пустым для сохранения текущего значения): ")
             last_name = input("Введите фамилию (оставьте пустым для сохранения текущего значения): ")
             faculty = input("Введите факультет (оставьте пустым для сохранения текущего значения): ")
             birth_date = input("Введите дату рождения (оставьте пустым для сохранения текущего значения): ")
+            if not validate_date(birth_date):
+                print('Ошибка: Неправильный формат даты. Используйте формат YYYY-MM-DD.')
+                continue
             update_student_data(student_id, first_name or None, last_name or None, faculty or None, birth_date or None)
 
         elif choice == '7':
             instructor_id = int(input("Введите ID преподавателя: "))
+            if not check_teacher_exists(instructor_id):
+                print(f'Ошибка: Преподаватель с ID {instructor_id} не существует.')
+                continue
             first_name = input("Введите имя (оставьте пустым для сохранения текущего значения): ")
             last_name = input("Введите фамилию (оставьте пустым для сохранения текущего значения): ")
             department = input("Введите кафедру (оставьте пустым для сохранения текущего значения): ")
@@ -364,9 +409,15 @@ def main():
 
         elif choice == '8':
             course_id = int(input("Введите ID курса: "))
+            if not check_course_exists(course_id):
+                print(f'Ошибка: Курс с ID {course_id} не существует.')
+                continue
             course_name = input("Введите имя курса (оставьте пустым для сохранения текущего значения): ")
             course_description = input("Введите описание курса (оставьте пустым для сохранения текущего значения): ")
             instructor_id = input("Введите ID препода (оставьте пустым для сохранения текущего значения): ")
+            if not check_teacher_exists(instructor_id):
+                print(f'Ошибка: Преподаватель с ID {instructor_id} не существует.')
+                continue
             update_course_data(course_id, course_name or None, course_description or None, instructor_id or None)
         
         elif choice == '9':
