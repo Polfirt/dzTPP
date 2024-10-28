@@ -59,19 +59,19 @@ connection.commit()
 
 
 def check_student_exists(student_id):
-    db_cursor.execute('SELECT COUNT(*) FROM Students WHERE ID = ?', (student_id,))
+    db_cursor.execute('SELECT COUNT(*) FROM Students WHERE student_id = ?', (student_id,))
     return db_cursor.fetchone()[0] > 0
 
 def check_teacher_exists(instructor_id):
-    db_cursor.execute('SELECT COUNT(*) FROM Teachers WHERE ID = ?', (instructor_id,))
+    db_cursor.execute('SELECT COUNT(*) FROM Teachers WHERE instructor_id = ?', (instructor_id,))
     return db_cursor.fetchone()[0] > 0
 
 def check_course_exists(course_id):
-    db_cursor.execute('SELECT COUNT(*) FROM Courses WHERE ID = ?', (course_id,))
+    db_cursor.execute('SELECT COUNT(*) FROM Courses WHERE course_id = ?', (course_id,))
     return db_cursor.fetchone()[0] > 0
 
 def check_exam_exists(exam_id):
-    db_cursor.execute('SELECT COUNT(*) FROM Exams WHERE ID = ?', (exam_id,))
+    db_cursor.execute('SELECT COUNT(*) FROM Exams WHERE exam_id = ?', (exam_id,))
     return db_cursor.fetchone()[0] > 0
 
 def validate_date(date_string):
